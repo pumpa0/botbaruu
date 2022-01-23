@@ -65,6 +65,7 @@ mot = '•'
 ke = '```'
 pathImg = setting.pathImg
 ownerNomor = [`${setting.ownerNumber}`]
+ownerNumber =`6285731855426`
 ownerName = setting.ownerName
 rply = '_HanBotz_'
 tamnel = fs.readFileSync('./media/gura.jpeg')
@@ -386,12 +387,12 @@ gura.chatRead(from, "read")
 //--------- COMMAND ----------
 switch(command) {
 
-case 'menu':
+case 'menuuu':
 thu = await gura.getStatus(`${sender.split('@')[0]}@s.whatsapp.net`, MessageType.text)
-menuh = `${ucapanWaktu} - @${sender.split("@")[0]}
+menuh = `${ucapanWaktu} 
 
 _*• Contact Owner*_
-_Whatsapp : @${owner}_
+_Whatsapp : Han_
 _Api : https://wa.me/6285731855426_
 
 ╭─❍ *USER INFO :*
@@ -401,9 +402,9 @@ _Api : https://wa.me/6285731855426_
 ╰─❍
 
 ╭─❍ *INFO BOT*
-├❍ _Name : ${botName}_
+├❍ _Name : HanBotz_
 ├❍ _Lib : baileys_
-├❍ _Prefix : ${prefix}_
+├❍ _Prefix :[  *${prefix}* ]_
 ├❍ _Runtime : ${runtime(on)}_
 ╰─❍
 
@@ -436,10 +437,10 @@ _Api : https://wa.me/6285731855426_
 ├❍ ${mot} _${prefix}ytmp3 query_
 ├❍ ${mot} _${prefix}ytmp4 query_
 ╰─❍
-
 `
 // gura.sendMessage(from, { contentText: `${menuh}`, footerText: `http://bit.ly/hanbotofficial`, buttons: [{ buttonId: `${prefix}owner`, buttonText: { displayText: '~Owner' }, type: 1 } ], headerType: 'LOCATION', locationMessage: { degreesLatitude: '', degreesLongitude: '', jpegThumbnail: tamnel, contextInfo: {mentionedJid: [sender, ownerNumber]}}}, 'buttonsMessage') //
-reply(menuh)
+
+reply(menuh, { footerText: 'http://bit.ly/hanbotofficial'})
 break
 
 case 'owner':
@@ -651,7 +652,6 @@ await gura.sendMessage(from, gbuttonan, MessageType.buttonsMessage, {quoted:fake
 break
 
 case 'ytmp3':
-if (!isGroup && !itsMe && !isOwner)return reply(mess.only.group)
 if (args.length === 0) return reply(`Kirim perintah *${prefix}ytmp3 [linkYt]*`)
 let isLinks = args[0].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
 if (!isLinks) return reply('Link Invalid')
