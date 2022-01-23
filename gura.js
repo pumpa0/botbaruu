@@ -66,7 +66,7 @@ ke = '```'
 pathImg = setting.pathImg
 ownerNomor = [`${setting.ownerNumber}`]
 ownerName = setting.ownerName
-rply = '_Made with MaulBot~_'
+rply = '_HanBotz_'
 tamnel = fs.readFileSync('./media/gura.jpeg')
 
 
@@ -177,8 +177,9 @@ function parseMention(text = '') {
 return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net')
 }
 
+
 const reply = (teks) => {
-   gura.sendMessage(from,teks,text,{quoted: fakevo})
+   gura.sendMessage(from,teks,text,{quoted: mek})
 }
 
 const replyNtag = (teks) => {
@@ -1062,7 +1063,7 @@ break
 			fs.unlinkSync(media)
 			if (err) return reply('Yah gagal, coba ulangi ^_^')
 			buffer = fs.readFileSync(ran)
-			fakethumb(buffer,'NIH')
+			gura.sendMessage(from, buffer, image, {quoted: mek, caption: 'HanBotz'})
 			fs.unlinkSync(ran)
 			})
 			break
