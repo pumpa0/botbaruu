@@ -179,7 +179,7 @@ return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net'
 
 
 const reply = (teks) => {
-   gura.sendMessage(from,teks,text,{quoted: mek})
+   gura.sendMessage(from,teks,text, {quoted:dep})
 }
 
 const replyNtag = (teks) => {
@@ -1063,7 +1063,7 @@ break
 			fs.unlinkSync(media)
 			if (err) return reply('Yah gagal, coba ulangi ^_^')
 			buffer = fs.readFileSync(ran)
-			gura.sendMessage(from, buffer, image, {quoted: mek, caption: 'HanBotz'})
+			gura.sendMessage(from, buffer, image, {quoted: dep, caption: 'HanBotz'})
 			fs.unlinkSync(ran)
 			})
 			break
