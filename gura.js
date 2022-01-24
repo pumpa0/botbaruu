@@ -44,12 +44,13 @@ const { color, bgcolor } = require('./lib/warna')
 const { wait, simih, getBuffer, h2k, generateMessageID, getGroupAdmins, getRandom, banner, start, info, success, close , sleep} = require('./lib/functions')
 const { fetchJson, fetchText , kyun} = require('./lib/fetcher')
 const { Tiktokdl } = require('./lib/tiktok.js')
-const { yta, ytv } = require("./lib/ytdl");
 const { uptotele, uploadFile, RESTfulAPI, uploadImages } = require('./lib/uploadimage')
 const Exif = require('./lib/exif');
 const exif = new Exif();
 const { smsg } = require('./lib/simple')
 const { mediafiredl } = require('./lib/mediafiredl')
+const { yta, ytv, ytv144, ytv240, ytv480, ytv720, ytv1080, igdl, twitter, upload, formatDate } = require('./lib/ytdl')
+const { webp2gifFile  } = require("./lib/gif.js")
 
 //----- DATABASE -------
 let setting = JSON.parse(fs.readFileSync('./setting.json'))
@@ -58,18 +59,18 @@ let anlink = JSON.parse(fs.readFileSync('./database/antilink.json'))
 let welkom = JSON.parse(fs.readFileSync('./database/welcome.json'))
 
 //----- SINGKAT -------
-prefix = setting.prefix
 owner = setting.owner
 lolkey = setting.lolkey
 mot = '•'
 ke = '```'
 pathImg = setting.pathImg
-ownerNomor = [`${setting.ownerNumber}`]
+ownerNomor = `6285731855426`
 ownerNumber =`6285731855426`
 ownerName = setting.ownerName
 rply = '_HanBotz_'
 tamnel = fs.readFileSync('./media/gura.jpeg')
-
+multi = true
+nopref = false
 
 
 module.exports = gura = async (gura, dep) => {
@@ -104,6 +105,17 @@ const getCmd = (id) => {
 };  
 
 const cmd = (type === 'buttonsResponseMessage' && dep.message.buttonsResponseMessage.selectedButtonId && m.quoted.sender === gura.user.jid) ? dep.message.buttonsResponseMessage.selectedButtonId : (type === 'listResponseMessage' && dep.message.listResponseMessage.singleSelectReply.selectedRowId && m.quoted.sender === gura.user.jid) ? dep.message.listResponseMessage.singleSelectReply.selectedRowId : (type === 'conversation' && dep.message.conversation) ? dep.message.conversation : (type == 'imageMessage') && dep.message.imageMessage.caption ? dep.message.imageMessage.caption : (type == 'videoMessage') && dep.message.videoMessage.caption ? dep.message.videoMessage.caption : (type == 'extendedTextMessage') && dep.message.extendedTextMessage.text ? dep.message.extendedTextMessage.text : (type == 'stickerMessage') && (getcmd(dep.message.stickerMessage.fileSha256.toString('hex')) !== null && getcmd(dep.message.stickerMessage.fileSha256.toString('hex')) !== undefined) ? getcmd(dep.message.stickerMessage.fileSha256.toString('hex')) : "".slice(1).trim().split(/ +/).shift().toLowerCase()
+
+if (multi){
+		    var prefix = /^[°zZ#$@*+,.?=''():√%!¢£¥€π¤ΠΦ_&><`™©®Δ^βα¦|/\\©^]/.test(cmd) ? cmd.match(/^[°zZ#$@*+,.?=''():√%¢£¥€π¤ΠΦ_&><!`™©®Δ^βα¦|/\\©^]/gi) : '.'
+        } else {
+            if (nopref){
+                prefix = ''
+            } else {
+                prefix = prefa
+            }
+        }
+
 body = (type === 'buttonsResponseMessage' && dep.message.buttonsResponseMessage.selectedButtonId.startsWith(prefix) && m.quoted.sender === gura.user.jid) ? dep.message.buttonsResponseMessage.selectedButtonId : (type === 'listResponseMessage' && dep.message.listResponseMessage.singleSelectReply.selectedRowId.startsWith(prefix) && m.quoted.sender === gura.user.jid) ? dep.message.listResponseMessage.singleSelectReply.selectedRowId : (type === 'conversation' && dep.message.conversation.startsWith(prefix)) ? dep.message.conversation : (type == 'imageMessage') && dep.message.imageMessage.caption.startsWith(prefix) ? dep.message.imageMessage.caption : (type == 'videoMessage') && dep.message.videoMessage.caption.startsWith(prefix) ? dep.message.videoMessage.caption : (type == 'extendedTextMessage') && dep.message.extendedTextMessage.text.startsWith(prefix) ? dep.message.extendedTextMessage.text : (type == 'stickerMessage') && (getcmd(dep.message.stickerMessage.fileSha256.toString('hex')) !== null && getcmd(dep.message.stickerMessage.fileSha256.toString('hex')) !== undefined) ? (getcmd(dep.message.stickerMessage.fileSha256.toString('hex')).startsWith(prefix) ? getcmd(dep.message.stickerMessage.fileSha256.toString('hex')) : '') : ""
 budy = (type === 'conversation') ? dep.message.conversation : (type === 'extendedTextMessage') ? dep.message.extendedTextMessage.text : ''
 const command = body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase()
@@ -352,6 +364,10 @@ const sendMediaURL = async(to, url, text="", mids=[]) =>{
 if(mids.length > 0){
 text = normalizeMention(to, text, mids)
 }
+const sendMedia = async(from, url, text="", mids=[]) =>{
+                if(mids.length > 0){
+                    text = normalizeMention(from, text, mids)
+                }
 const fn = Date.now() / 10000;
 const filename = fn.toString()
 let mime = ""
@@ -623,192 +639,121 @@ reply(result)
 gura.sendMessage(from, {url: `${rescun[0].link}` }, document, { mimetype: `${rescun[0].mime}`, filename:`${rescun[0].nama}`})
 break
 
-case 'play':
-//if(!isPremium)return reply(mess.only.prem)
-if (!isGroup && !itsMe && !isOwner)return reply(mess.only.group)
-if (args.length < 1) return reply(`Kirim perintah *${prefix}play query`)
-reply('Searching...')
-let yut = await yts(q)
-yta(yut.videos[0].url)
-.then(async(res) => {
-const { thumb, title, filesizeF, filesize } = res
-const capti = `P L A Y\n\n Title : ${title}\n\n Views: ${yut.videos[0].views}\n\n Duration : ${yut.videos[0].timestamp}\n\n URL : ${yut.videos[0].url}`
-ya = await getBuffer(thumb)
-py =await gura.prepareMessage(from, ya, image)
-
-gbutsan = [
-{buttonId: `${prefix}playmp3 ${q}`, buttonText: {displayText: '</AUDIO'}, type: 1},
-{buttonId: `${prefix}playmp4 ${q}`, buttonText: {displayText: '</VIDEO'}, type: 1}
-]
-gbuttonan = {
-imageMessage: py.message.imageMessage,
-contentText: monospace(capti),
-footerText: monospace(`Get Music / Video`),
-buttons: gbutsan,
-headerType: 4
-}
-await gura.sendMessage(from, gbuttonan, MessageType.buttonsMessage, {quoted:fakevo})
-})
-break
-
 case 'ytmp3':
-if (args.length === 0) return reply(`Kirim perintah *${prefix}ytmp3 [linkYt]*`)
-let isLinks = args[0].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
-if (!isLinks) return reply('Link Invalid')
-try {
-reply(monospace(mess.wait))
-yta(args[0])
-.then((res) => {
-const { dl_link, thumb, title, filesizeF, filesize } = res
-axios.get(`https://tinyurl.com/api-create.php?url=${dl_link}`)
-.then(async (a) => {
-if (Number(filesize) >= 35000) return sendMediaURL(from, thumb, `*Data Berhasil Didapatkan!*\n\n*Title* : ${title}\n*Ext* : MP3\n*Filesize* : ${filesizeF}\n*Link* : ${a.data}\n\n_Untuk durasi lebih dari batas disajikan dalam bentuk link_`)
-const captions = `YTMP3\n\nTitle : ${title}\nExt : MP3\nSize : ${filesizeF}\n\nSilahkan tunggu file media sedang dikirim mungkin butuh beberapa menit`
-bvidt2 = await getBuffer(thumb)
-reply(captions)
-bvid2 = await getBuffer(dl_link)
-await 
-gura.sendMessage(from, bvid2, audio, {
-contextInfo: {
-externalAdReply: {
-"title": fake,
-"body": `🎧 PLAY MUSIC 🎧`,
-"mediaType": "VIDEO",
-"mediaType": 2,
-"thumbnailUrl": `https://i.ibb.co/6mLsrTb/59fb052184fd.jpg`,
-"mediaUrl": args[0]
-}
-}, quoted:fakevo
+        
+        if(!q) return reply('linknya?')
+        reply('mengirim file...')     
+        res = await yta(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Audio```')})
+        sendMedia(from, `${res.dl_link}`,{quoted:dep})
+        break         
+        case 'ytmp4':
+        case 'ytmp4-360':
+        
+        if(!q) return reply('linknya?')   
+reply('mengirim file...')         
+        res = await ytv(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Video, Ulangi Atau Gunakan Kualitas Lain```')})
+        sendMedia(from, `${res.dl_link}`,'```HanBotz```')
+        break                      
+        case 'ytmp4-144':
+        
+        if(!q) return reply('linknya?')        
+reply('mengirim file...')    
+        res = await ytv144(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Video, Ulangi Atau Gunakan Kualitas Lain```')})
+        sendMedia(from, `${res.dl_link}`,'```HanBotz```')
+        break                      
+        case 'ytmp4-240':
+        
+        if(!q) return reply('linknya?')            
+        reply('mengirim file...')
+        res = await ytv240(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Video, Ulangi Atau Gunakan Kualitas Lain```')})
+        sendMedia(from, `${res.dl_link}`,'```HanBotz```')
+        break                      
+        case 'ytmp4-480':
+        
+        if(!q) return reply('linknya?')        
+reply('mengirim file...')    
+        res = await ytv480(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Video, Ulangi Atau Gunakan Kualitas Lain```')})
+        sendMedia(from, `${res.dl_link}`,'```HanBotz```')
+        break                      
+        case 'ytmp4-720':
+        
+        if(!q) return reply('linknya?')        
+reply('mengirim file...')    
+        res = await ytv720(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Video, Ulangi Atau Gunakan Kualitas Lain```')})
+        sendMedia(from, `${res.dl_link}`,'```HanBotz```')
+        break                      
+        case 'ytmp4-1080':
+        
+        if(!q) return reply('linknya?')      
+reply('mengirim file...')      
+        res = await ytv1080(`${q}`).catch(e => {
+        reply('```[ ! ] Error Saat Mengirim Video, Ulangi Atau Gunakan Kualitas Lain```')})
+        sendMedia(from, `${res.dl_link}`,'```HanBotz```')
+        break                      
+        	case 'ytsearch':
+        
+			if (args.length < 1) return reply('Tolong masukan query!')
+			reply('searching...')
+			var srch = args.join('');
+			try {
+        	var aramas = await yts(srch);
+   			} catch {
+        	return await gura.sendMessage(from, 'Error!', MessageType.text, dload)
+    		}
+    		aramat = aramas.all 
+    		var tbuff = await getBuffer(aramat[0].image)
+    		var ytresult = '';
+    		ytresult += '「 *YOUTUBE SEARCH* 」'
+    		ytresult += '\n________________________\n\n'
+   			aramas.all.map((video) => {
+        	ytresult += '❏ Title: ' + video.title + '\n'
+            ytresult += '❏ Link: ' + video.url + '\n'
+            ytresult += '❏ Durasi: ' + video.timestamp + '\n'
+            ytresult += '❏ Upload: ' + video.ago + '\n________________________\n\n'
+    		});
+    		ytresult += '*© HanBotz*'
+    		await fakethumb(tbuff, ytresult)
+					break
+
+case 'twmp4': case 'twitter':
+
+if (args.length < 1) return reply('Link?')
+lin = args[0]
+twitter(lin).then(res => {
+console.log('[ TWITTER ] downloader')
+Anu = res.SD
+sendMedia(from, Anu)
 })
-})
-})
-} catch (err) {
-reply(mess.error.api)
-}
 break
+case 'twmp3': case 'twittermp3':
 
-case 'ytmp4':
-if (!isGroup && !itsMe && !isOwner)return reply(mess.only.group)
-if (args.length === 0) return reply(`Kirim perintah *${prefix}ytmp4 [linkYt]*`)
-let isLinks2 = args[0].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
-if (!isLinks2) return reply('Link Invalid')
-try {
-reply(monospace(mess.wait))
-ytv(args[0])
-.then((res) => {
-const { dl_link, thumb, title, filesizeF, filesize } = res
-axios.get(`https://tinyurl.com/api-create.php?url=${dl_link}`)
-.then(async (a) => {
-if (Number(filesize) >= 40000) return reply(`YOUTUBE MP4
-
-Data Berhasil Didapatkan!
-▢ Title : ${title}\
-▢ Ext : MP4
-▢ Filesize : ${filesizeF}
-▢ Link : ${a.data}
-
-Untuk durasi lebih dari batas disajikan dalam bentuk link`)
-				const captionsYtmp4 = `YOUTUBE MP4
-				
-Data Berhasil Didapatkan!
-▢ Title : ${title}
-▢ Ext : MP4
-▢ Size : ${filesizeF}
-
-Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit`
-bvidt3 = await getBuffer(thumb)
-reply(captionsYtmp4)
-bvid3 = await getBuffer(dl_link)
-await gura.sendMessage(from, bvid3, video, {
-contextInfo: {
-externalAdReply: {
-"title": fake,
-"body": `🎧 PLAY VIDEO 🎧`,
-"mediaType": "VIDEO",
-"mediaType": 2,
-"thumbnailUrl": `https://i.ibb.co/6mLsrTb/59fb052184fd.jpg`,
-"mediaUrl": args[0]
-}
-}, quoted:rep
+if (args.length < 1) return reply('Link?')
+lin = args[0]
+twitter(lin).then(async (res) => {
+console.log('[ TWITTER ] downloader')
+Anu = res.SD
+khs = await getBuffer(Anu)
+gura.sendMessage(from, khs, audio, {mimetype:'audio/mp4', filename:'audio.mp3', quoted:dep})
 })
-})		
-})
-} catch (err) {
-reply(mess.error.api)
-}
 break
-
-case 'playmp3': 
-if (!isGroup && !itsMe && !isOwner)return reply(mess.only.group)
-try {
-reply(monospace(mess.wait))
-let yut = await yts(q)
-yta(yut.videos[0].url)
-.then((res) => {
-const { dl_link, thumb, title, filesizeF, filesize } = res
-axios.get(`https://tinyurl.com/api-create.php?url=${dl_link}`)
-.then((a) => {
-if (Number(filesize) >= 30000) return sendMediaURL(from, thumb, `*P L A YM P 3*\n\n${shp} Title : ${title}\n${shp} Ext : MP3\n${shp} Filesize : ${filesizeF}\n${shp} Upload : ${yut.videos[0].ago}\n${shp} Views : ${yut.videos[0].views}\n${shp} Duration : ${yut.videos[0].timestamp}\n${shp} Link : ${a.data}\n\n_Untuk durasi lebih dari batas disajikan dalam bentuk link_`)
-
-const captionis = `*P L A YM P 3*\n\n${mot} Title : ${title}\n${mot} Size : ${filesizeF}\n${mot} Views: ${yut.videos[0].views}\n${mot} Duration : ${yut.videos[0].timestamp}\n${mot} URL : ${yut.videos[0].url}\n\n*_Permintaan Anda Sedang Di Prosess!_*`
-//sendMediaURL(from, thumb, captionis)
-sendMediaURL(from, dl_link, '')
-
-})
-})
-.catch((err) => reply(`${err}`))
-} catch (err) {
-sendMess(ownerNumber, 'PlayMp3 Error : ' + err)
-console.log(color('[PlayMp3]', 'red'), err)
-reply(mess.error.api)
-}
-break
-case 'playmp4':
-try {
-reply(monospace(mess.wait))
-let yut = await yts(q)
-ytv(yut.videos[0].url)
-.then((res) => {
-const { dl_link, thumb, title, filesizeF, filesize } = res
-axios.get(`https://tinyurl.com/api-create.php?url=${dl_link}`)
-.then((a) => {
-if (Number(filesize) >= 40000) return sendMediaURL(from, thumb, `*P L A YM P 4*\n\n • Judul : ${title}\n • Upload : ${yut.videos[0].ago}\n • Ditonton : ${yut.videos[0].views}\n • Duration : ${yut.videos[0].timestamp}\n • Link : ${a.data}\n\n_Ukuran File Terlalu besar, anda bisa download sendiri lewat Link Diatas!!_`)
- 
-const mp4 = `
-*PLAY VIDEO*\n\n Judul : ${title}\n\n Upload : ${yut.videos[0].ago}\n\n Ditonton : ${yut.videos[0].views}\n\n Duration : ${yut.videos[0].timestamp}\n\n Url : ${yut.videos[0].url}`
-//sendMediaURL(from, thumb, mp4)
-sendMediaURL(from, dl_link, mp4)
-})
-})
-.catch((err) => reply(`${err}`))
-} catch (err) {
-sendMess(ownerNumber, 'PlayMp4 Error : ' + err)
-console.log(color('[PlayMp4]', 'red'), err)
-reply(mess.error)
-}
-break
-
 case 'ig':
-//if(!isPremium)return reply(mess.only.prem)
-if (!isGroup && !itsMe && !isOwner)return reply(mess.only.group)
-try{
-if(!q)return reply('Url nya mana?')
-reply(monospace(mess.wait))
-igg = await fetchJson(`http://zekais-api.herokuapp.com/igdl?url=${q}&apikey=dnYyDs9a`)
-igt = `I N S T A G R A MD O W N L O A D E R
+case 'igdl':
+case 'instagram':
 
-Username  : ${igg.username}
-Fullname  : ${igg.fullName}
-Followers : ${igg.followers}
-
-Wait a minute ${igg.result[0].type} is being sent..`
-reply(monospace(igt))
-sendMediaURL(from,igg.result[0].url,monospace(`Type ${igg.result[0].type}`))
-} catch (e) {
-reply(e)
-console.log(e)
-}
-break
+if (!c) return reply('Linknya?')
+var { igDownloader } = require('./lib/igdown')
+res = await igDownloader(`${c}`).catch(e => {
+reply('_error_')
+})
+console.log(res)
+sendMedia(from,`${res.result.link}`)
+                    break
 
 case 'bc':
              if(!isOwner && !isMe) return reply('Anda Bukan Owner')
@@ -976,7 +921,7 @@ reply(`Gagal, pada saat mengkonversi ${tipe} ke stiker`)
 })
 .on('end', function () {
 console.log('Finish')
-Rapa.sendMessage(from, fs.readFileSync(ran), sticker, {quoted:rep})
+gura.sendMessage(from, fs.readFileSync(ran), sticker, {quoted:rep})
 fs.unlinkSync(media)
 fs.unlinkSync(ran)
 })
